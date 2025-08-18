@@ -1,0 +1,123 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}Manage Projects - MailApp{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-project-diagram me-2"></i>Manage Projects</h2>
+    <a href="{% url 'create_project' %}" class="btn btn-success">
+        <i class="fas fa-plus me-2"></i>Create New Project
+    </a>
+</div>
+
+<div class="row">
+    <!-- Your Projects -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0"><i class="fas fa-users me-2"></i>Your Projects</h5>
+            </div>
+            <div class="card-body">
+                {% if user_projects %}
+                    {% for project in user_projects %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+                        <div>
+                            <h6 class="mb-1">{{ project.name }}</h6>
+                            <small class="text-muted">{{ project.description|default:"No description" }}</small>
+                            <br>
+                            <small class="text-info">
+                                <i class="fas fa-user me-1"></i>Created by: {{ project.created_by.get_full_name|default:project.created_by.username }}
+                            </small>
+                        </div>
+                        <div>
+                            {% if user_projects.count > 1 %}
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="leave">
+                                <input type="hidden" name="project_id" value="{{ project.id }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" 
+                                        onclick="return confirm('Are you sure you want to leave this project?')">
+                                    <i class="fas fa-sign-out-alt me-1"></i>Leave
+                                </button>
+                            </form>
+                            {% else %}
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>Last project
+                            </small>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-folder-open fa-3x text-muted mb-3"></i>
+                        <p class="text-muted">You're not a member of any projects yet.</p>
+                        <a href="{% url 'create_project' %}" class="btn btn-primary">
+                            <i class="fas fa-plus me-2"></i>Create Your First Project
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Available Projects -->
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Available Projects</h5>
+            </div>
+            <div class="card-body">
+                {% if available_projects %}
+                    {% for project in available_projects %}
+                    <div class="d-flex justify-content-between align-items-center border-bottom py-3">
+                        <div>
+                            <h6 class="mb-1">{{ project.name }}</h6>
+                            <small class="text-muted">{{ project.description|default:"No description" }}</small>
+                            <br>
+                            <small class="text-info">
+                                <i class="fas fa-user me-1"></i>Created by: {{ project.created_by.get_full_name|default:project.created_by.username }}
+                            </small>
+                            <br>
+                            <small class="badge bg-secondary">
+                                <i class="fas fa-users me-1"></i>{{ project.members.count }} member{{ project.members.count|pluralize }}
+                            </small>
+                        </div>
+                        <div>
+                            <form method="post" class="d-inline">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="join">
+                                <input type="hidden" name="project_id" value="{{ project.id }}">
+                                <button type="submit" class="btn btn-outline-success btn-sm">
+                                    <i class="fas fa-sign-in-alt me-1"></i>Join
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="text-center py-4">
+                        <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                        <p class="text-muted">You're already a member of all available projects!</p>
+                        <a href="{% url 'create_project' %}" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Create New Project
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="mt-4">
+    <div class="alert alert-info">
+        <h6><i class="fas fa-info-circle me-2"></i>Project Management Tips:</h6>
+        <ul class="mb-0">
+            <li>You can be a member of multiple projects</li>
+            <li>You can only send emails to users within the same project</li>
+            <li>You must be a member of at least one project</li>
+            <li>Create new projects to collaborate with different teams</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

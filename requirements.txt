@@ -1,0 +1,5 @@
+Django==4.2.7
+django-crispy-forms==2.0
+crispy-bootstrap5==0.7
+google-generativeai
+python-dotenv

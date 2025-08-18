@@ -1,0 +1,66 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}Create Project - MailApp{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-plus me-2"></i>Create New Project</h2>
+    <a href="{% url 'manage_projects' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Projects
+    </a>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Project Name <span class="text-danger">*</span></label>
+                        <input type="text" 
+                               class="form-control" 
+                               id="name" 
+                               name="name" 
+                               placeholder="Enter project name"
+                               required>
+                        <div class="form-text">Choose a unique name for your project</div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="description" class="form-label">Project Description</label>
+                        <textarea class="form-control" 
+                                  id="description" 
+                                  name="description" 
+                                  rows="4" 
+                                  placeholder="Describe your project (optional)"></textarea>
+                        <div class="form-text">Provide a brief description to help others understand the project</div>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between">
+                        <a href="{% url 'manage_projects' %}" class="btn btn-secondary">
+                            <i class="fas fa-times me-2"></i>Cancel
+                        </a>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-plus me-2"></i>Create Project
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        
+        <div class="mt-4">
+            <div class="alert alert-info">
+                <h6><i class="fas fa-lightbulb me-2"></i>Project Creation Guidelines:</h6>
+                <ul class="mb-0">
+                    <li>Choose a descriptive name that reflects your project's purpose</li>
+                    <li>You'll automatically become a member of the project you create</li>
+                    <li>Other users can join your project from the available projects list</li>
+                    <li>Project names must be unique across the platform</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

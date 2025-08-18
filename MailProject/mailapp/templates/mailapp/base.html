@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MailApp{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #3730a3;
+            --secondary-color: #f8fafc;
+            --accent-color: #06b6d4;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+        }
+
+        /* Modern Navbar */
+        .navbar-custom {
+            background: rgba(248, 250, 252, 0.95);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+            box-shadow: var(--shadow-md);
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: var(--primary-color) !important;
+            font-size: 1.5rem;
+        }
+
+        .navbar-brand i {
+            color: var(--accent-color);
+        }
+
+        .navbar-custom .navbar-nav .nav-link {
+            color: var(--text-primary) !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .navbar-custom .navbar-nav .nav-link:hover,
+        .navbar-custom .navbar-nav .nav-link.active {
+            color: var(--primary-color) !important;
+        }
+
+        .navbar-custom .btn {
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .navbar-custom .btn:hover {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Modern Sidebar */
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--border-color);
+            min-height: calc(100vh - 76px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .sidebar .nav-link {
+            color: var(--text-secondary);
+            border-radius: 12px;
+            margin-bottom: 4px;
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .sidebar .nav-link:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--accent-color));
+            color: white;
+            transform: translateX(4px);
+        }
+
+        .sidebar .nav-link.active {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .compose-btn-main {
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            border: none;
+            border-radius: 16px;
+            padding: 14px 24px;
+            font-weight: 600;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+        }
+
+        .compose-btn-main:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        /* Content Area */
+        .content-area {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            margin: 20px;
+            box-shadow: var(--shadow-lg);
+            min-height: calc(100vh - 140px);
+        }
+
+        /* Mail Items */
+        .mail-item {
+            border: none;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            padding: 20px;
+            background: white;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            border-left: 4px solid transparent;
+        }
+
+        .mail-item:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+            border-left-color: var(--primary-color);
+        }
+
+        .mail-item.unread {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            border-left-color: var(--warning-color);
+        }
+
+        /* Cards */
+        .card-modern {
+            border: none;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+        }
+
+        .card-header-modern {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            color: white;
+            border-radius: 20px 20px 0 0 !important;
+            border: none;
+            padding: 20px 24px;
+        }
+
+        /* Buttons */
+        .btn-modern {
+            border-radius: 12px;
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .btn-primary-modern {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-light));
+            border: none;
+        }
+
+        .btn-primary-modern:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-outline-modern {
+            border: 2px solid var(--border-color);
+            color: var(--text-secondary);
+            background: white;
+        }
+
+        .btn-outline-modern:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        /* Forms */
+        .form-control-modern {
+            border-radius: 12px;
+            border: 2px solid var(--border-color);
+            padding: 12px 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control-modern:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        }
+
+        /* Alerts */
+        .alert-modern {
+            border: none;
+            border-radius: 16px;
+            padding: 16px 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Floating Compose Button */
+        .compose-btn-floating {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--success-color), #059669);
+            border: none;
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .compose-btn-floating:hover {
+            transform: scale(1.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        }
+
+        /* Sidebar heading */
+        .sidebar-heading {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Dropdown */
+        .dropdown-menu-modern {
+            border: none;
+            border-radius: 16px;
+            box-shadow: var(--shadow-xl);
+            padding: 8px;
+        }
+
+        .dropdown-item-modern {
+            border-radius: 12px;
+            padding: 12px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .dropdown-item-modern:hover {
+            background: var(--secondary-color);
+            color: var(--primary-color);
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in-up {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        /* Glass Card for Auth Pages */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            box-shadow: var(--shadow-xl);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .content-area {
+                margin: 10px;
+                border-radius: 16px;
+            }
+            
+            .mail-item {
+                padding: 16px;
+            }
+            
+            .glass-card {
+                border-radius: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-custom sticky-top">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-paper-plane me-2"></i>MailApp
+            </a>
+            
+            {% if user.is_authenticated %}
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" style="color: var(--text-primary);"">>
+                        <div class="avatar me-2">
+                            <i class="fas fa-user-circle fa-2x text-primary"></i>
+                        </div>
+                        <div class="d-none d-md-block">
+                            <div class="fw-semibold">{{ user.first_name }} {{ user.last_name }}</div>
+                            <small class="text-muted">{{ user.email }}</small>
+                        </div>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-modern dropdown-menu-end">
+                        <li><a class="dropdown-item dropdown-item-modern" href="{% url 'inbox' %}"><i class="fas fa-inbox me-3"></i>Inbox</a></li>
+                        <li><a class="dropdown-item dropdown-item-modern" href="{% url 'sent' %}"><i class="fas fa-paper-plane me-3"></i>Sent</a></li>
+                        <li><a class="dropdown-item dropdown-item-modern" href="{% url 'compose' %}"><i class="fas fa-edit me-3"></i>Compose</a></li>
+                        <li><a class="dropdown-item dropdown-item-modern" href="{% url 'drafts' %}"><i class="fas fa-file-alt me-3"></i>Drafts</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item dropdown-item-modern" href="{% url 'manage_projects' %}"><i class="fas fa-project-diagram me-3"></i>Manage Projects</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" class="d-inline w-100">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item dropdown-item-modern w-100 text-start" style="border: none; background: none;">
+                                    <i class="fas fa-sign-out-alt me-3"></i>Logout
+                                </button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            {% else %}
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link btn btn-outline-modern me-2" href="{% url 'login' %}">Login</a>
+                <a class="nav-link btn btn-primary-modern" href="{% url 'register' %}">Register</a>
+            </div>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container-fluid px-0">
+        <div class="row g-0">
+            {% if user.is_authenticated %}
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2">
+                <div class="sidebar p-4">
+                    <div class="d-grid gap-2 mb-4">
+                        <a href="{% url 'compose' %}" class="btn compose-btn-main">
+                            <i class="fas fa-plus me-2"></i>New Message
+                        </a>
+                    </div>
+                    
+                    <ul class="nav nav-pills flex-column mb-4">
+                        <li class="nav-item">
+                            <a href="{% url 'inbox' %}" class="nav-link {% if request.resolver_match.url_name == 'inbox' %}active{% endif %}">
+                                <i class="fas fa-inbox me-3"></i>Inbox
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'sent' %}" class="nav-link {% if request.resolver_match.url_name == 'sent' %}active{% endif %}">
+                                <i class="fas fa-paper-plane me-3"></i>Sent
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'drafts' %}" class="nav-link {% if request.resolver_match.url_name == 'drafts' %}active{% endif %}">
+                                <i class="fas fa-file-alt me-3"></i>Drafts
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{% url 'manage_projects' %}" class="nav-link {% if request.resolver_match.url_name == 'manage_projects' or request.resolver_match.url_name == 'create_project' %}active{% endif %}">
+                                <i class="fas fa-users me-3"></i>Projects
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    {% if user.userprofile.projects.all %}
+                    <div class="sidebar-heading px-3 mb-3">
+                        <span>Your Projects</span>
+                    </div>
+                    <ul class="nav nav-pills flex-column">
+                        {% for project in user.userprofile.projects.all %}
+                        <li class="nav-item">
+                            <a href="{% url 'inbox' %}?project={{ project.id }}" class="nav-link">
+                                <i class="fas fa-folder me-3"></i>{{ project.name }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    {% endif %}
+                </div>
+            </div>
+            
+            <!-- Main Content Area -->
+            <div class="col-md-9 col-lg-10">
+                <div class="content-area">
+            {% endif %}
+                
+                <!-- Messages -->
+                {% if messages %}
+                <div class="p-4 pb-0">
+                    {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-modern alert-dismissible fade show fade-in-up" role="alert">
+                        <i class="fas fa-info-circle me-2"></i>{{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Page Content -->
+                <main class="p-4 fade-in-up">
+                    {% block content %}
+                    {% endblock %}
+                </main>
+                
+            {% if user.is_authenticated %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Floating Compose Button for Mobile -->
+    {% if user.is_authenticated %}
+    <a href="{% url 'compose' %}" class="btn compose-btn-floating d-md-none d-flex align-items-center justify-content-center">
+        <i class="fas fa-plus fa-lg text-white"></i>
+    </a>
+    {% endif %}
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    {% block scripts %}
+    {% endblock %}
+</body>
+</html>

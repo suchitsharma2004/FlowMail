@@ -1,0 +1,174 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}{{ mail.subject }} - MailApp{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-envelope-open me-2"></i>Mail Details</h2>
+    <div>
+        <a href="{% url 'inbox' %}" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-arrow-left me-2"></i>Back to Inbox
+        </a>
+        <a href="{% url 'compose' %}" class="btn btn-primary">
+            <i class="fas fa-reply me-2"></i>Reply
+        </a>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="card">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-md-8">
+                        <h5 class="mb-1">{{ mail.subject }}</h5>
+                        <small class="text-muted">
+                            <i class="fas fa-folder me-1"></i>Project: 
+                            <span class="badge bg-secondary">{{ mail.project.name }}</span>
+                        </small>
+                    </div>
+                    <div class="col-md-4 text-end">
+                        <small class="text-muted">
+                            {{ mail.sent_at|date:"F d, Y" }}<br>
+                            {{ mail.sent_at|time:"g:i A" }}
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card-body">
+                <!-- Sender/Recipient Information -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <strong>From:</strong><br>
+                                <span>{{ mail.sender.first_name }} {{ mail.sender.last_name }}</span><br>
+                                <small class="text-muted">{{ mail.sender.username }}</small>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-success rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                 style="width: 40px; height: 40px;">
+                                <i class="fas fa-user text-white"></i>
+                            </div>
+                            <div>
+                                <strong>To:</strong><br>
+                                <span>{{ mail.recipient.first_name }} {{ mail.recipient.last_name }}</span><br>
+                                <small class="text-muted">{{ mail.recipient.username }}</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <hr>
+                
+                <!-- Mail Body -->
+                <div class="mail-body">
+                    {{ mail.body|linebreaks }}
+                </div>
+            </div>
+            
+            <div class="card-footer bg-light">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <small class="text-muted">
+                            <i class="fas fa-clock me-1"></i>
+                            Received: {{ mail.sent_at|date:"F d, Y g:i A" }}
+                        </small>
+                    </div>
+                    <div>
+                        {% if mail.is_read %}
+                        <span class="badge bg-success">
+                            <i class="fas fa-check me-1"></i>Read
+                        </span>
+                        {% else %}
+                        <span class="badge bg-warning">
+                            <i class="fas fa-envelope me-1"></i>Unread
+                        </span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Quick Actions -->
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title"><i class="fas fa-bolt me-2"></i>Quick Actions</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    <a href="{% url 'compose' %}?reply_to={{ mail.id }}" class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-reply me-2"></i>Reply
+                    </a>
+                    <a href="{% url 'compose' %}?forward={{ mail.id }}" class="btn btn-outline-secondary btn-sm">
+                        <i class="fas fa-share me-2"></i>Forward
+                    </a>
+                    <a href="{% url 'inbox' %}?project={{ mail.project.id }}" class="btn btn-outline-info btn-sm">
+                        <i class="fas fa-folder me-2"></i>View Project Mails
+                    </a>
+                    <a href="{% url 'inbox' %}?search={{ mail.sender.username }}" class="btn btn-outline-success btn-sm">
+                        <i class="fas fa-search me-2"></i>More from {{ mail.sender.first_name }}
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Project Members -->
+        {% if mail.project %}
+        <div class="card mt-3">
+            <div class="card-body">
+                <h6 class="card-title">
+                    <i class="fas fa-users me-2"></i>{{ mail.project.name }} Members
+                </h6>
+                <div class="row">
+                    {% for member in mail.project.members.all %}
+                    <div class="col-md-6 col-lg-4 mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="bg-secondary rounded-circle d-flex align-items-center justify-content-center me-2" 
+                                 style="width: 30px; height: 30px;">
+                                <i class="fas fa-user text-white" style="font-size: 12px;"></i>
+                            </div>
+                            <div>
+                                <small>
+                                    {{ member.first_name }} {{ member.last_name }}<br>
+                                    <span class="text-muted">{{ member.username }}</span>
+                                </small>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Handle reply button click
+    $('a[href*="reply_to"]').click(function() {
+        // Store reply context in session storage for compose page
+        sessionStorage.setItem('reply_subject', 'Re: {{ mail.subject|escapejs }}');
+        sessionStorage.setItem('reply_body', '\n\n--- Original Message ---\nFrom: {{ mail.sender.first_name }} {{ mail.sender.last_name }}\nSent: {{ mail.sent_at|date:"F d, Y g:i A" }}\nSubject: {{ mail.subject|escapejs }}\n\n{{ mail.body|escapejs }}');
+        sessionStorage.setItem('reply_project', '{{ mail.project.id }}');
+        sessionStorage.setItem('reply_recipient', '{{ mail.sender.id }}');
+    });
+    
+    // Handle forward button click
+    $('a[href*="forward"]').click(function() {
+        sessionStorage.setItem('forward_subject', 'Fwd: {{ mail.subject|escapejs }}');
+        sessionStorage.setItem('forward_body', '\n\n--- Forwarded Message ---\nFrom: {{ mail.sender.first_name }} {{ mail.sender.last_name }}\nTo: {{ mail.recipient.first_name }} {{ mail.recipient.last_name }}\nSent: {{ mail.sent_at|date:"F d, Y g:i A" }}\nSubject: {{ mail.subject|escapejs }}\n\n{{ mail.body|escapejs }}');
+        sessionStorage.setItem('forward_project', '{{ mail.project.id }}');
+    });
+});
+</script>
+{% endblock %}

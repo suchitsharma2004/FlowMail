@@ -1,0 +1,361 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}Register - MailApp{% endblock %}
+
+{% block content %}
+<div class="container-fluid min-vh-100 d-flex align-items-center justify-content-center" style="padding: 2rem 1rem;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8 col-xl-6">
+            <!-- Welcome Header -->
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); border-radius: 20px; box-shadow: var(--shadow-lg);">
+                    <i class="fas fa-user-plus text-white" style="font-size: 2rem;"></i>
+                </div>
+                <h2 class="fw-bold text-primary mb-2">Join MailApp</h2>
+                <p class="text-muted mb-0">Create your account and start managing your projects</p>
+            </div>
+            
+            <!-- Register Card -->
+            <div class="glass-card p-4 p-md-5">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Personal Information Section -->
+                    <div class="mb-4">
+                        <h5 class="fw-semibold text-primary mb-3 d-flex align-items-center">
+                            <i class="fas fa-user me-2"></i>Personal Information
+                        </h5>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.first_name.id_for_label }}" class="form-label fw-medium text-dark">First Name</label>
+                                <input type="text" 
+                                       name="{{ form.first_name.name }}" 
+                                       id="{{ form.first_name.id_for_label }}"
+                                       class="form-control border-0 modern-input" 
+                                       placeholder="Enter your first name"
+                                       style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 12px;"
+                                       value="{{ form.first_name.value|default:'' }}">
+                                {% if form.first_name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.first_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.last_name.id_for_label }}" class="form-label fw-medium text-dark">Last Name</label>
+                                <input type="text" 
+                                       name="{{ form.last_name.name }}" 
+                                       id="{{ form.last_name.id_for_label }}"
+                                       class="form-control border-0 modern-input" 
+                                       placeholder="Enter your last name"
+                                       style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 12px;"
+                                       value="{{ form.last_name.value|default:'' }}">
+                                {% if form.last_name.errors %}
+                                    <div class="text-danger small mt-1">{{ form.last_name.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Account Information Section -->
+                    <div class="mb-4">
+                        <h5 class="fw-semibold text-primary mb-3 d-flex align-items-center">
+                            <i class="fas fa-key me-2"></i>Account Information
+                        </h5>
+                        
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="{{ form.username.id_for_label }}" class="form-label fw-medium text-dark">Username</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary); border-radius: 12px 0 0 12px;">
+                                        <i class="fas fa-at"></i>
+                                    </span>
+                                    <input type="text" 
+                                           name="{{ form.username.name }}" 
+                                           id="{{ form.username.id_for_label }}"
+                                           class="form-control border-0 modern-input" 
+                                           placeholder="Choose a username"
+                                           style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 0 12px 12px 0;"
+                                           value="{{ form.username.value|default:'' }}"
+                                           required>
+                                </div>
+                                {% if form.username.errors %}
+                                    <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.email.id_for_label }}" class="form-label fw-medium text-dark">Email Address</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary); border-radius: 12px 0 0 12px;">
+                                        <i class="fas fa-envelope"></i>
+                                    </span>
+                                    <input type="email" 
+                                           name="{{ form.email.name }}" 
+                                           id="{{ form.email.id_for_label }}"
+                                           class="form-control border-0 modern-input" 
+                                           placeholder="Enter your email"
+                                           style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 0 12px 12px 0;"
+                                           value="{{ form.email.value|default:'' }}"
+                                           required>
+                                </div>
+                                {% if form.email.errors %}
+                                    <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="{{ form.password1.id_for_label }}" class="form-label fw-medium text-dark">Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary); border-radius: 12px 0 0 12px;">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" 
+                                           name="{{ form.password1.name }}" 
+                                           id="{{ form.password1.id_for_label }}"
+                                           class="form-control border-0 modern-input" 
+                                           placeholder="Create a password"
+                                           style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 0 12px 12px 0;"
+                                           required>
+                                </div>
+                                {% if form.password1.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password1.errors }}</div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.password2.id_for_label }}" class="form-label fw-medium text-dark">Confirm Password</label>
+                                <div class="input-group">
+                                    <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary); border-radius: 12px 0 0 12px;">
+                                        <i class="fas fa-lock"></i>
+                                    </span>
+                                    <input type="password" 
+                                           name="{{ form.password2.name }}" 
+                                           id="{{ form.password2.id_for_label }}"
+                                           class="form-control border-0 modern-input" 
+                                           placeholder="Confirm your password"
+                                           style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem; border-radius: 0 12px 12px 0;"
+                                           required>
+                                </div>
+                                {% if form.password2.errors %}
+                                    <div class="text-danger small mt-1">{{ form.password2.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Project Setup Section -->
+                    <div class="mb-4">
+                        <h5 class="fw-semibold text-primary mb-3 d-flex align-items-center">
+                            <i class="fas fa-folder me-2"></i>Project Setup
+                        </h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-medium text-dark">Choose Project Option:</label>
+                            <div class="mt-3">
+                                {% for choice in form.project_choice %}
+                                <div class="form-check mb-2">
+                                    {{ choice.tag }}
+                                    <label class="form-check-label fw-medium text-dark" for="{{ choice.id_for_label }}" style="margin-left: 0.5rem;">
+                                        {{ choice.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% if form.project_choice.errors %}
+                                <div class="text-danger small mt-1">{{ form.project_choice.errors }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <!-- New Project Fields -->
+                        <div id="new-project-fields" style="display: none;">
+                            <div class="modern-card p-4 mb-3" style="background: rgba(79, 70, 229, 0.05); border: 1px solid rgba(79, 70, 229, 0.1); border-radius: 16px;">
+                                <h6 class="fw-semibold text-primary mb-3 d-flex align-items-center">
+                                    <i class="fas fa-plus-circle me-2"></i>Create New Project
+                                </h6>
+                                <div class="mb-3">
+                                    <label for="{{ form.new_project_name.id_for_label }}" class="form-label fw-medium text-dark">Project Name</label>
+                                    <input type="text" 
+                                           name="{{ form.new_project_name.name }}" 
+                                           id="{{ form.new_project_name.id_for_label }}"
+                                           class="form-control border-0 modern-input" 
+                                           placeholder="Enter project name"
+                                           style="background: rgba(255, 255, 255, 0.9); padding: 0.875rem 1rem; border-radius: 12px;"
+                                           value="{{ form.new_project_name.value|default:'' }}">
+                                    {% if form.new_project_name.help_text %}
+                                        <div class="form-text small text-muted">{{ form.new_project_name.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.new_project_name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.new_project_name.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                <div class="mb-3">
+                                    <label for="{{ form.new_project_description.id_for_label }}" class="form-label fw-medium text-dark">Project Description</label>
+                                    <textarea name="{{ form.new_project_description.name }}" 
+                                              id="{{ form.new_project_description.id_for_label }}"
+                                              class="form-control border-0 modern-input" 
+                                              placeholder="Describe your project"
+                                              style="background: rgba(255, 255, 255, 0.9); padding: 0.875rem 1rem; border-radius: 12px; min-height: 100px;">{{ form.new_project_description.value|default:'' }}</textarea>
+                                    {% if form.new_project_description.help_text %}
+                                        <div class="form-text small text-muted">{{ form.new_project_description.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.new_project_description.errors %}
+                                        <div class="text-danger small mt-1">{{ form.new_project_description.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Existing Project Fields -->
+                        <div id="existing-project-fields">
+                            <div class="modern-card p-4 mb-3" style="background: rgba(6, 182, 212, 0.05); border: 1px solid rgba(6, 182, 212, 0.1); border-radius: 16px;">
+                                <h6 class="fw-semibold text-info mb-3 d-flex align-items-center">
+                                    <i class="fas fa-users me-2"></i>Join Existing Project
+                                </h6>
+                                <div class="mb-3">
+                                    <label for="{{ form.existing_project.id_for_label }}" class="form-label fw-medium text-dark">Select Project</label>
+                                    <select name="{{ form.existing_project.name }}" 
+                                            id="{{ form.existing_project.id_for_label }}"
+                                            class="form-select border-0 modern-input" 
+                                            style="background: rgba(255, 255, 255, 0.9); padding: 0.875rem 1rem; border-radius: 12px;">
+                                        <option value="">Choose a project...</option>
+                                        {% for choice in form.existing_project.field.choices %}
+                                            {% if choice.0 %}
+                                                <option value="{{ choice.0 }}" {% if form.existing_project.value == choice.0 %}selected{% endif %}>{{ choice.1 }}</option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                    {% if form.existing_project.help_text %}
+                                        <div class="form-text small text-muted">{{ form.existing_project.help_text }}</div>
+                                    {% endif %}
+                                    {% if form.existing_project.errors %}
+                                        <div class="text-danger small mt-1">{{ form.existing_project.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Form Errors -->
+                    {% if form.non_field_errors %}
+                    <div class="alert alert-danger border-0 rounded-3 mb-4" style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger-color) !important;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        {{ form.non_field_errors }}
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Submit Button -->
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-medium" style="padding: 1rem; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); border: none; box-shadow: var(--shadow-md); transition: all 0.3s ease;">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Already have an account? 
+                            <a href="{% url 'login' %}" class="text-primary text-decoration-none fw-medium">Sign in here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modern-input:focus {
+        background: rgba(255, 255, 255, 0.95) !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        transform: translateY(-1px);
+        transition: all 0.3s ease;
+    }
+    
+    .modern-card {
+        transition: all 0.3s ease;
+    }
+    
+    .modern-card:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg);
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg) !important;
+    }
+    
+    /* Style the radio buttons */
+    input[type="radio"] {
+        appearance: none;
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border: 2px solid var(--border-color);
+        border-radius: 50%;
+        background: white;
+        cursor: pointer;
+        position: relative;
+        transition: all 0.3s ease;
+        margin-top: 0.3rem;
+    }
+    
+    input[type="radio"]:checked {
+        border-color: var(--primary-color);
+        background: white;
+    }
+    
+    input[type="radio"]:checked::before {
+        content: '';
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+    
+    input[type="radio"]:focus {
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+        outline: none;
+    }
+    
+    input[type="radio"]:hover {
+        border-color: var(--primary-light);
+        transform: scale(1.05);
+    }
+    
+    .form-check-label {
+        cursor: pointer;
+        user-select: none;
+    }
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+$(document).ready(function() {
+    // Handle project choice radio buttons
+    $('input[name="project_choice"]').change(function() {
+        if ($(this).val() === 'new') {
+            $('#new-project-fields').slideDown(300);
+            $('#existing-project-fields').slideUp(300);
+        } else {
+            $('#new-project-fields').slideUp(300);
+            $('#existing-project-fields').slideDown(300);
+        }
+    });
+    
+    // Set initial state
+    var selectedChoice = $('input[name="project_choice"]:checked').val();
+    if (selectedChoice === 'new') {
+        $('#new-project-fields').show();
+        $('#existing-project-fields').hide();
+    } else {
+        $('#new-project-fields').hide();
+        $('#existing-project-fields').show();
+    }
+});
+</script>
+{% endblock %}

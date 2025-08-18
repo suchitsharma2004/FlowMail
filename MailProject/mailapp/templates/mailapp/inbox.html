@@ -1,0 +1,155 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}Inbox - MailApp{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2 class="mb-1"><i class="fas fa-inbox me-3 text-primary"></i>Inbox</h2>
+        <p class="text-muted mb-0">{{ page_obj.paginator.count }} message{{ page_obj.paginator.count|pluralize }}</p>
+    </div>
+    <a href="{% url 'compose' %}" class="btn btn-primary-modern">
+        <i class="fas fa-plus me-2"></i>New Message
+    </a>
+</div>
+
+<!-- Search and Filter -->
+<div class="card card-modern mb-4">
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-lg-8">
+                <form method="get" class="d-flex">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control form-control-modern" 
+                               placeholder="Search messages, senders, subjects..." value="{{ search_query }}">
+                        <input type="hidden" name="project" value="{{ current_project }}">
+                        <button class="btn btn-primary-modern" type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div class="col-lg-4">
+                <form method="get">
+                    <select name="project" class="form-select form-control-modern" onchange="this.form.submit()">
+                        <option value="">📁 All Projects</option>
+                        {% for project in user.userprofile.projects.all %}
+                        <option value="{{ project.id }}" {% if current_project == project.id|stringformat:"s" %}selected{% endif %}>
+                            🔖 {{ project.name }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <input type="hidden" name="search" value="{{ search_query }}">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Mail List -->
+{% if page_obj %}
+<div class="mail-list">
+    {% for mail in page_obj %}
+    <div class="mail-item {% if not mail.is_read %}unread{% endif %}">
+        <a href="{% url 'read_mail' mail.id %}" class="text-decoration-none text-dark">
+            <div class="d-flex align-items-start">
+                <div class="flex-shrink-0 me-3">
+                    {% if not mail.is_read %}
+                    <div class="bg-primary rounded-circle" style="width: 12px; height: 12px;"></div>
+                    {% else %}
+                    <div class="bg-light rounded-circle border" style="width: 12px; height: 12px;"></div>
+                    {% endif %}
+                </div>
+                <div class="flex-grow-1 min-w-0">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div class="d-flex align-items-center">
+                            <div class="avatar-sm me-3">
+                                <div class="bg-gradient-primary text-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <span class="fw-bold">{{ mail.sender.first_name.0|default:mail.sender.username.0|upper }}</span>
+                                </div>
+                            </div>
+                            <div>
+                                <h6 class="mb-0 fw-semibold">{{ mail.sender.first_name }} {{ mail.sender.last_name }}</h6>
+                                <small class="text-muted">{{ mail.sender.username }}</small>
+                            </div>
+                        </div>
+                        <div class="text-end">
+                            <small class="text-muted">{{ mail.sent_at|date:"M d, H:i" }}</small>
+                            {% if mail.project %}
+                            <div class="mt-1">
+                                <span class="badge bg-light text-dark border">{{ mail.project.name }}</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <h6 class="mb-1 {% if not mail.is_read %}fw-bold{% endif %}">{{ mail.subject|truncatechars:60 }}</h6>
+                    <p class="text-muted mb-0 small">{{ mail.body|truncatechars:120|striptags }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="card card-modern">
+    <div class="card-body text-center py-5">
+        <div class="empty-state">
+            <i class="fas fa-inbox fa-4x text-muted mb-4"></i>
+            <h4 class="text-muted mb-3">No messages found</h4>
+            {% if search_query %}
+            <p class="text-muted mb-4">No messages match your search criteria.</p>
+            <a href="{% url 'inbox' %}" class="btn btn-outline-modern">
+                <i class="fas fa-times me-2"></i>Clear Search
+            </a>
+            {% else %}
+            <p class="text-muted mb-4">Your inbox is empty. Start composing messages to communicate with your team!</p>
+            <a href="{% url 'compose' %}" class="btn btn-primary-modern">
+                <i class="fas fa-plus me-2"></i>Compose First Message
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Pagination -->
+{% if page_obj.has_other_pages %}
+<div class="d-flex justify-content-center mt-4">
+    <nav aria-label="Page navigation">
+        <ul class="pagination pagination-lg">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link btn-modern" href="?page=1{% if search_query %}&search={{ search_query }}{% endif %}{% if current_project %}&project={{ current_project }}{% endif %}">
+                        <i class="fas fa-angle-double-left"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link btn-modern" href="?page={{ page_obj.previous_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_project %}&project={{ current_project }}{% endif %}">
+                        <i class="fas fa-angle-left"></i>
+                    </a>
+                </li>
+            {% endif %}
+            
+            <li class="page-item active">
+                <span class="page-link bg-primary border-primary">
+                    {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+            
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link btn-modern" href="?page={{ page_obj.next_page_number }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_project %}&project={{ current_project }}{% endif %}">
+                        <i class="fas fa-angle-right"></i>
+                    </a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link btn-modern" href="?page={{ page_obj.paginator.num_pages }}{% if search_query %}&search={{ search_query }}{% endif %}{% if current_project %}&project={{ current_project }}{% endif %}">
+                        <i class="fas fa-angle-double-right"></i>
+                    </a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
+{% endif %}
+{% endblock %}

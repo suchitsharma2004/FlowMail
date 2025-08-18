@@ -1,0 +1,108 @@
+{% extends 'mailapp/base.html' %}
+
+{% block title %}Login - MailApp{% endblock %}
+
+{% block content %}
+<div class="container-fluid vh-100 d-flex align-items-center justify-content-center" style="padding: 2rem 1rem;">
+    <div class="row w-100 justify-content-center">
+        <div class="col-12 col-sm-10 col-md-8 col-lg-6 col-xl-4">
+            <!-- Welcome Header -->
+            <div class="text-center mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center mb-3" 
+                     style="width: 80px; height: 80px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); border-radius: 20px; box-shadow: var(--shadow-lg);">
+                    <i class="fas fa-envelope text-white" style="font-size: 2rem;"></i>
+                </div>
+                <h2 class="fw-bold text-primary mb-2">Welcome Back</h2>
+                <p class="text-muted mb-0">Sign in to your MailApp account</p>
+            </div>
+            
+            <!-- Login Card -->
+            <div class="glass-card p-4 p-md-5">
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.errors %}
+                    <div class="alert alert-danger border-0 rounded-3 mb-4" style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid var(--danger-color) !important;">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <div class="small">{{ error }}</div>
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.username.id_for_label }}" class="form-label fw-medium text-dark">Username</label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary);">
+                                <i class="fas fa-user"></i>
+                            </span>
+                            <input type="text" 
+                                   name="{{ form.username.name }}" 
+                                   id="{{ form.username.id_for_label }}"
+                                   class="form-control border-0 modern-input" 
+                                   placeholder="Enter your username"
+                                   style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem;"
+                                   value="{{ form.username.value|default:'' }}"
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="mb-4">
+                        <label for="{{ form.password.id_for_label }}" class="form-label fw-medium text-dark">Password</label>
+                        <div class="input-group">
+                            <span class="input-group-text border-0" style="background: rgba(255, 255, 255, 0.8); color: var(--text-secondary);">
+                                <i class="fas fa-lock"></i>
+                            </span>
+                            <input type="password" 
+                                   name="{{ form.password.name }}" 
+                                   id="{{ form.password.id_for_label }}"
+                                   class="form-control border-0 modern-input" 
+                                   placeholder="Enter your password"
+                                   style="background: rgba(255, 255, 255, 0.8); padding: 0.875rem 1rem;"
+                                   required>
+                        </div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mb-4">
+                        <button type="submit" class="btn btn-primary btn-lg fw-medium" style="padding: 0.875rem; border-radius: 12px; background: linear-gradient(135deg, var(--primary-color), var(--primary-light)); border: none; box-shadow: var(--shadow-md); transition: all 0.3s ease;">
+                            <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                        </button>
+                    </div>
+                    
+                    <div class="text-center">
+                        <p class="text-muted mb-0">Don't have an account? 
+                            <a href="{% url 'register' %}" class="text-primary text-decoration-none fw-medium">Create one here</a>
+                        </p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .modern-input:focus {
+        background: rgba(255, 255, 255, 0.95) !important;
+        box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1) !important;
+        transform: translateY(-1px);
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-lg) !important;
+    }
+    
+    .input-group-text {
+        border-top-left-radius: 12px !important;
+        border-bottom-left-radius: 12px !important;
+    }
+    
+    .modern-input {
+        border-top-right-radius: 12px !important;
+        border-bottom-right-radius: 12px !important;
+    }
+</style>
+{% endblock %}

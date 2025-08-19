@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-echo "🚀 Starting MailApp with forced migrations..."
+echo "🚀 Starting FlowMail with forced migrations..."
 
 # Change to the correct directory
 cd MailProject

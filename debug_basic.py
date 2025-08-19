@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent / 'MailProject'
 sys.path.insert(0, str(BASE_DIR))
 
 # Set environment variables
-os.environ.setdefault('DATABASE_URL', 'postgresql://neondb_owner:npg_TsrilzJ4OR3B@ep-orange-sky-a12mgfbb-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require')
+# Note: Set DATABASE_URL in your environment or .env file
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'MailProject.settings')
 
 print("🔧 Testing basic Django setup...")

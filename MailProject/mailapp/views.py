@@ -559,3 +559,32 @@ def debug_user_data(request):
     debug_info['all_projects'] = [{'id': p.id, 'name': p.name, 'created_by': p.created_by.username} for p in all_projects]
     
     return JsonResponse(debug_info)
+
+def health_check(request):
+    """Health check endpoint for debugging deployment issues"""
+    try:
+        # Test database connection
+        from django.db import connection
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+        
+        # Test model access
+        user_count = User.objects.count()
+        profile_count = UserProfile.objects.count()
+        project_count = Project.objects.count()
+        
+        return JsonResponse({
+            'status': 'healthy',
+            'database': 'connected',
+            'users': user_count,
+            'profiles': profile_count,
+            'projects': project_count,
+            'debug': settings.DEBUG,
+            'database_url': 'configured' if settings.DATABASES['default']['NAME'] else 'missing'
+        })
+    except Exception as e:
+        return JsonResponse({
+            'status': 'error',
+            'error': str(e),
+            'type': type(e).__name__
+        }, status=500)

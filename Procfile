@@ -1,1 +1,1 @@
-web: ./start_with_migrations.sh
+web: bash start_with_migrations.sh

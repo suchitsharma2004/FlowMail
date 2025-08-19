@@ -92,7 +92,15 @@ WSGI_APPLICATION = 'MailProject.wsgi.application'
 if os.getenv('DATABASE_URL'):
     # Production database (Neon PostgreSQL)
     DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+        'default': dj_database_url.parse(
+            os.getenv('DATABASE_URL'),
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    # Add SSL settings for Neon
+    DATABASES['default']['OPTIONS'] = {
+        'sslmode': 'require',
     }
 else:
     # Development database (SQLite)

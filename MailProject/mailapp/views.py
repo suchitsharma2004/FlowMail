@@ -15,36 +15,59 @@ def register(request):
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
-            # Create the user
-            user = form.save()
-            
-            # Create UserProfile
-            profile, created = UserProfile.objects.get_or_create(user=user)
-            
-            # Handle project selection
-            project_choice = form.cleaned_data['project_choice']
-            
-            if project_choice == 'new':
-                # Create new project
-                project = Project.objects.create(
-                    name=form.cleaned_data['new_project_name'],
-                    description=form.cleaned_data.get('new_project_description', ''),
-                    created_by=user
-                )
-                profile.projects.add(project)
-            else:
-                # Join existing project
-                project = form.cleaned_data['existing_project']
-                profile.projects.add(project)
-            
-            # Authenticate and login
-            username = form.cleaned_data.get('username')
-            password = form.cleaned_data.get('password1')
-            user = authenticate(username=username, password=password)
-            login(request, user)
-            
-            messages.success(request, f'Account created successfully! Welcome to {project.name}!')
-            return redirect('inbox')
+            try:
+                # Create the user
+                user = form.save()
+                
+                # Create UserProfile
+                profile, created = UserProfile.objects.get_or_create(user=user)
+                
+                # Handle project selection
+                project_choice = form.cleaned_data['project_choice']
+                
+                if project_choice == 'new':
+                    # Create new project
+                    project = Project.objects.create(
+                        name=form.cleaned_data['new_project_name'],
+                        description=form.cleaned_data.get('new_project_description', ''),
+                        created_by=user
+                    )
+                    profile.projects.add(project)
+                else:
+                    # Join existing project
+                    project = form.cleaned_data.get('existing_project')
+                    if project:
+                        profile.projects.add(project)
+                    else:
+                        # Create a default project if none selected
+                        project = Project.objects.create(
+                            name=f"{user.username}'s Project",
+                            description="Default project",
+                            created_by=user
+                        )
+                        profile.projects.add(project)
+                
+                # Authenticate and login
+                username = form.cleaned_data.get('username')
+                password = form.cleaned_data.get('password1')
+                user = authenticate(username=username, password=password)
+                if user:
+                    login(request, user)
+                    messages.success(request, f'Account created successfully! Welcome to {project.name}!')
+                    return redirect('inbox')
+                else:
+                    messages.error(request, 'Authentication failed after registration.')
+                    
+            except Exception as e:
+                messages.error(request, f'Registration failed: {str(e)}')
+                # Delete the user if it was created but something else failed
+                if 'user' in locals():
+                    try:
+                        user.delete()
+                    except:
+                        pass
+        else:
+            messages.error(request, 'Please correct the errors below.')
     else:
         form = CustomUserCreationForm()
     
@@ -52,23 +75,43 @@ def register(request):
 
 @login_required
 def inbox(request):
-    # Get user's projects
-    user_projects = request.user.userprofile.projects.all() if hasattr(request.user, 'userprofile') else []
-    
-    # Get project filter from query params
-    project_filter = request.GET.get('project', '').strip()
-    
-    # Get mails for the user
-    mails = Mail.objects.filter(recipient=request.user).order_by('-sent_at')
-    
-    # Handle project filtering
-    if project_filter and project_filter.lower() != 'none' and project_filter != '':
-        try:
-            project_filter = int(project_filter)
-            mails = mails.filter(project_id=project_filter)
-        except (ValueError, TypeError):
+    try:
+        # Ensure user has a UserProfile
+        profile, created = UserProfile.objects.get_or_create(user=request.user)
+        
+        # Get user's projects
+        user_projects = profile.projects.all()
+        
+        # If user has no projects, create a default one
+        if not user_projects.exists():
+            default_project = Project.objects.create(
+                name=f"{request.user.username}'s Project",
+                description="Default project",
+                created_by=request.user
+            )
+            profile.projects.add(default_project)
+            user_projects = profile.projects.all()
+        
+        # Get project filter from query params
+        project_filter = request.GET.get('project', '').strip()
+        
+        # Get mails for the user
+        mails = Mail.objects.filter(recipient=request.user).order_by('-sent_at')
+        
+        # Handle project filtering
+        if project_filter and project_filter.lower() != 'none' and project_filter != '':
+            try:
+                project_filter = int(project_filter)
+                mails = mails.filter(project_id=project_filter)
+            except (ValueError, TypeError):
+                project_filter = ''
+        else:
             project_filter = ''
-    else:
+    
+    except Exception as e:
+        messages.error(request, f'Error loading inbox: {str(e)}')
+        user_projects = []
+        mails = Mail.objects.none()
         project_filter = ''
     
     # Search functionality

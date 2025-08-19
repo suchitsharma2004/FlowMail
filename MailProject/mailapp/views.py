@@ -631,3 +631,12 @@ def health_check(request):
             'error': str(e),
             'type': type(e).__name__
         }, status=500)
+
+def simple_test(request):
+    """Simple test endpoint that doesn't use database"""
+    return JsonResponse({
+        'status': 'ok',
+        'message': 'Django is working',
+        'debug': settings.DEBUG,
+        'database_configured': bool(settings.DATABASES['default'].get('NAME'))
+    })

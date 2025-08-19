@@ -15,6 +15,7 @@ urlpatterns = [
     path('projects/', views.manage_projects, name='manage_projects'),
     path('projects/create/', views.create_project, name='create_project'),
     path('health/', views.health_check, name='health_check'),  # Health check for debugging
+    path('test/', views.simple_test, name='simple_test'),  # Simple test without database
     path('debug/user-data/', views.debug_user_data, name='debug_user_data'),  # Debug URL
     path('debug/project-data/', views.debug_project_data, name='debug_project_data'),  # Debug URL for project data
 ]

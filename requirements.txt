@@ -1,9 +1,9 @@
 Django==4.2.7
 django-crispy-forms==2.0
 crispy-bootstrap5==0.7
-google-generativeai
-python-dotenv
-psycopg2-binary
-dj-database-url
-whitenoise
-gunicorn
+google-generativeai>=0.3.0
+python-dotenv>=1.0.0
+psycopg2-binary>=2.9.0
+dj-database-url>=2.0.0
+whitenoise>=6.5.0
+gunicorn>=21.0.0

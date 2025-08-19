@@ -1,1 +1,1 @@
-web: cd MailProject && gunicorn MailProject.wsgi:application --bind 0.0.0.0:$PORT
+web: ./start_with_migrations.sh

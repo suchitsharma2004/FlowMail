@@ -31,7 +31,6 @@ It organizes communication within project workflows, similar to Jira, while offe
 
 ---
 
-📸 Screenshots  
 <img width="1440" height="900" alt="Screenshot 2025-08-20 at 1 00 39 PM" src="https://github.com/user-attachments/assets/14e30a69-bf03-4c50-835d-095a10dc1df3" />
 
 ---

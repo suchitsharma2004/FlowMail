@@ -1,4 +1,4 @@
-✉️ ProMail – AI-Powered Project Mail System  
+✉️ FlowMail – AI-Powered Project Mail System  
 
 ![Python](https://img.shields.io/badge/Python-3.11-blue?logo=python&logoColor=white)  ![Django](https://img.shields.io/badge/Django-4.2.7-darkgreen?logo=django&logoColor=white)  ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-blue?logo=postgresql&logoColor=white)  ![Bootstrap](https://img.shields.io/badge/Bootstrap-5-purple?logo=bootstrap&logoColor=white)  ![jQuery](https://img.shields.io/badge/jQuery-AJAX-lightblue?logo=jquery&logoColor=white)  ![Render](https://img.shields.io/badge/Deployed%20on-Render-yellow?logo=render&logoColor=white)  
 
